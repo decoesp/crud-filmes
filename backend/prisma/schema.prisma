@@ -1,0 +1,56 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  movies Movie[]
+
+  @@map("users")
+}
+
+model Movie {
+  id              String    @id @default(uuid())
+  title           String
+  originalTitle   String    @map("original_title")
+  releaseDate     DateTime  @map("release_date")
+  description     String    @db.Text
+  duration        Int       // em minutos
+  budget          Decimal?  @db.Decimal(15, 2)
+  revenue         Decimal?  @db.Decimal(15, 2)
+  posterUrl       String?   @map("poster_url")
+  backdropUrl     String?   @map("backdrop_url")
+  trailerUrl      String?   @map("trailer_url")
+  genre           String?
+  director        String?
+  cast            String?   @db.Text
+  rating          Decimal?  @db.Decimal(3, 1)
+  status          String?   // Ex: "Lançado", "Em produção", etc.
+  voteCount       Int?      @map("vote_count")
+  voteAverage     Decimal?  @db.Decimal(3, 1) @map("vote_average")
+  reminderSent    Boolean   @default(false) @map("reminder_sent")
+  userId          String    @map("user_id")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([releaseDate])
+  @@index([genre])
+  @@map("movies")
+}

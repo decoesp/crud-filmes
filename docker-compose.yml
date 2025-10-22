@@ -1,0 +1,86 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:14-alpine
+    container_name: movies-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: movies_db
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Mailhog (Email testing)
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: movies-mailhog
+    restart: unless-stopped
+    ports:
+      - '1025:1025' # SMTP
+      - '8025:8025' # Web UI
+    logging:
+      driver: none
+
+  # Backend API (opcional - descomente se quiser rodar tudo no Docker)
+  # backend:
+  #   build:
+  #     context: ./backend
+  #     dockerfile: Dockerfile
+  #   container_name: movies-backend
+  #   restart: unless-stopped
+  #   ports:
+  #     - '3333:3333'
+  #   environment:
+  #     NODE_ENV: development
+  #     PORT: 3333
+  #     DATABASE_URL: postgresql://postgres:postgres@postgres:5432/movies_db
+  #     JWT_SECRET: dev-secret-key
+  #     JWT_EXPIRES_IN: 7d
+  #     SMTP_HOST: mailhog
+  #     SMTP_PORT: 1025
+  #     SMTP_USER: ''
+  #     SMTP_PASS: ''
+  #     FRONTEND_URL: http://localhost:5173
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #     mailhog:
+  #       condition: service_started
+  #   volumes:
+  #     - ./backend:/app
+  #     - /app/node_modules
+  #   command: npm run dev
+
+  # Frontend (opcional - descomente se quiser rodar tudo no Docker)
+  # frontend:
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: Dockerfile
+  #   container_name: movies-frontend
+  #   restart: unless-stopped
+  #   ports:
+  #     - '5173:5173'
+  #   environment:
+  #     VITE_API_URL: http://localhost:3333/api
+  #   volumes:
+  #     - ./frontend:/app
+  #     - /app/node_modules
+  #   command: npm run dev
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  default:
+    name: movies-network
