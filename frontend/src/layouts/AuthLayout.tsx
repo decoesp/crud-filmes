@@ -3,6 +3,7 @@ import heroImage from '@/assets/images/hero.png';
 import { Sun } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useDarkMode } from '@/hooks/useDarkMode';
+import { Footer } from '@/components/layout';
 
 interface AuthLayoutProps {
   children: React.ReactNode;
@@ -72,12 +73,7 @@ export function AuthLayout({ children }: AuthLayoutProps) {
             {children}
           </div>
         </main>
-
-        <footer className="px-6 py-4 text-center" style={{ background: '#12111380' }}>
-          <p className="text-sm text-gray-400">
-            2025 © Todos os direitos reservados • <span className="font-semibold">Cubos Movies</span>
-          </p>
-        </footer>
+      <Footer/>
       </div>
     </div>
   );
