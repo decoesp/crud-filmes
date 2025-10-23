@@ -345,10 +345,6 @@ Ver READMEs específicos:
 - [Backend README](./backend/README.md)
 - [Frontend README](./frontend/README.md)
 
-## 📚 Documentação Adicional
-
-- [Desafio Original](./Desafio%20Fullstack%20-%20Cubos%20Tecnologia.md)
-- [Plano de Desenvolvimento (4 dias)](./PLANO_DESENVOLVIMENTO.md)
 
 ## 👨‍💻 Autor
 
